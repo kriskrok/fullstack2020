@@ -9,35 +9,40 @@ const Button = ({ handleClick, text }) => (
 
 const Part = ({ name, value }) => (<>{name} {value}</>)
 
-const Statistics = (tila) => {
+const Statistics = ({ answers }) => {
+  let amount = Object.values(answers).reduce((prev, curr) => prev + curr)
+  let positive = answers.good / amount * 100
+  let average = (-1 * answers.bad + answers.good) / amount
+  
   return (
     <div>
       <Title title='statistics' />
-      <Part name='good' value={tila.good} /><br />
-      <Part name='neutral' value={tila.neutral} /><br />
-      <Part name='bad' value={tila.bad} /><br />
+      <Part name='good' value={answers.good} /><br />
+      <Part name='neutral' value={answers.neutral} /><br />
+      <Part name='bad' value={answers.bad} /><br />
+      <Part name='all' value={amount} /><br />
+      <Part name='average' value={Number.isNaN(average) ? 0 : average} /><br />
+      <Part name='positive' value={Number.isNaN(positive) ? 0 : positive } /> &#37;<br />
     </div>
   )
 }
 
 const App = () => {
-  // tallenna napit omaan tilaansa
-  const [good, setGood] = useState(0);
-  const [neutral, setNeutral] = useState(0);
-  const [bad, setBad] = useState(0);
+  const [answers, updateAnswers] = useState({
+    good: 0, neutral: 0, bad: 0
+  })
 
-  const increaseGood = () => setGood(good +1)
-  const increaseNeutral = () => setNeutral(neutral +1)
-  const increaseBad = () => setBad(bad +1)
+  const increaseGood = () => (updateAnswers({ ...answers, good: answers.good +1}))
+  const increaseNeutral = () => (updateAnswers({ ...answers, neutral: answers.neutral +1}))
+  const increaseBad = () => (updateAnswers({ ...answers, bad: answers.bad +1}))
   
-
   return (
     <React.Fragment>
       <Title title='Give feedback' />
       <Button handleClick={increaseGood} text='good'/>
       <Button handleClick={increaseNeutral} text='neutral'/>
       <Button handleClick={increaseBad} text='bad'/>
-      <Statistics good={good} neutral={neutral} bad={bad} />
+      <Statistics answers={answers} />
     </React.Fragment>
   )
 }
