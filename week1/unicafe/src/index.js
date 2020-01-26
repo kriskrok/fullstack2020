@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
+import './index.css';
 
 const Title = ({ title }) => (<h2>{title}</h2>)
 
-const Button = ({ handleClick, text }) => (
-  <button onClick={handleClick}>{text}</button>
-)
+const Button = ({ handleClick, text }) => (<button onClick={handleClick}>{text}</button>)
 
-const StatisticLine = ({ text, value }) => (<>{text} {value}</>)
+const StatisticLine = ({ text, value }) => (
+  <tr>
+    <th scope ='row'>{text}</th>
+    <td>{value}</td>
+  </tr>)
 
 const Statistics = ({ answers }) => {
   let amount = Object.values(answers).reduce((prev, curr) => prev + curr)
@@ -16,7 +19,7 @@ const Statistics = ({ answers }) => {
       <div>
         <Title title='statistics' />
         No feedback given
-        </div>
+      </div>
     )
   }
   let positive = answers.good / amount * 100
@@ -25,12 +28,16 @@ const Statistics = ({ answers }) => {
   return (
     <div>
       <Title title='statistics' />
-      <StatisticLine text='good' value={answers.good} /><br />
-      <StatisticLine text='neutral' value={answers.neutral} /><br />
-      <StatisticLine text='bad' value={answers.bad} /><br />
-      <StatisticLine text='all' value={amount} /><br />
-      <StatisticLine text='average' value={Number.isNaN(average) ? 0 : average} /><br />
-      <StatisticLine text='positive' value={Number.isNaN(positive) ? 0 : positive } /> &#37;<br />
+      <table>
+        <tbody>
+          <StatisticLine text='good' value={answers.good}/>
+          <StatisticLine text='neutral' value={answers.neutral}/>
+          <StatisticLine text='bad' value={answers.bad}/>
+          <StatisticLine text='all' value={amount}/>
+          <StatisticLine text='average' value={Number.isNaN(average) ? 0 : average}/>
+          <StatisticLine text='positive' value={Number.isNaN(average) ? 0 : positive + ' %'}/>
+        </tbody>
+      </table>
     </div>
   )
 }
