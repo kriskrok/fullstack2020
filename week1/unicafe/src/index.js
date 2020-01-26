@@ -7,22 +7,30 @@ const Button = ({ handleClick, text }) => (
   <button onClick={handleClick}>{text}</button>
 )
 
-const Part = ({ name, value }) => (<>{name} {value}</>)
+const StatisticLine = ({ text, value }) => (<>{text} {value}</>)
 
 const Statistics = ({ answers }) => {
   let amount = Object.values(answers).reduce((prev, curr) => prev + curr)
+  if (amount <= 0) {
+    return (
+      <div>
+        <Title title='statistics' />
+        No feedback given
+        </div>
+    )
+  }
   let positive = answers.good / amount * 100
   let average = (-1 * answers.bad + answers.good) / amount
   
   return (
     <div>
       <Title title='statistics' />
-      <Part name='good' value={answers.good} /><br />
-      <Part name='neutral' value={answers.neutral} /><br />
-      <Part name='bad' value={answers.bad} /><br />
-      <Part name='all' value={amount} /><br />
-      <Part name='average' value={Number.isNaN(average) ? 0 : average} /><br />
-      <Part name='positive' value={Number.isNaN(positive) ? 0 : positive } /> &#37;<br />
+      <StatisticLine text='good' value={answers.good} /><br />
+      <StatisticLine text='neutral' value={answers.neutral} /><br />
+      <StatisticLine text='bad' value={answers.bad} /><br />
+      <StatisticLine text='all' value={amount} /><br />
+      <StatisticLine text='average' value={Number.isNaN(average) ? 0 : average} /><br />
+      <StatisticLine text='positive' value={Number.isNaN(positive) ? 0 : positive } /> &#37;<br />
     </div>
   )
 }
