@@ -10,6 +10,7 @@ const App = () => {
   const [ newPerson, setNewPerson ] = useState(
     { name: '', number: '' }
   )
+  const [ filter, setFilter ] = useState('')
 
   const previouslyAdded = persons.some(person => person.name === newPerson.name)
 
@@ -29,6 +30,10 @@ const App = () => {
     setNewPerson({ ...newPerson, name: '', number: ''})
   }
 
+  const handleFilterChange = (event) => {
+    setFilter(event.target.value)
+  }
+
   const handleNameChange = (event) => {
     setNewPerson({ ...newPerson, name: event.target.value})
   }
@@ -41,10 +46,20 @@ const App = () => {
     <li>{contact.name} {contact.number}</li>
   )
 
+  const contactsToShow = filter.length === 0
+    ? persons
+    : persons.filter(person => person.name.toLowerCase().includes(filter.toLowerCase()))
+
   return (
     
     <React.Fragment>
       <h2>Phonebook</h2>
+
+      <div>
+        filter shown with: <input value={filter} onChange={handleFilterChange}/>
+      </div>
+
+      <h2>add a new</h2>
 
       <form onSubmit={addPerson}>
         <div>
@@ -60,7 +75,7 @@ const App = () => {
 
       <h2>Numbers</h2>
       <ul style={{listStyleType: 'none'}}>
-        {persons.map(contact => 
+        {contactsToShow.map(contact => 
           <Contact key={contact.name} contact={contact} />
         )}
       </ul>
