@@ -1,5 +1,33 @@
 import React, { useState } from 'react'
 
+const Contact = ({ contact }) => (<li>{contact.name} {contact.number}</li>)
+
+const Filter = ({ filter, handleChange}) => (
+    <form>
+      <div>filter shown with: <input value={filter} onChange={handleChange}/></div>
+    </form> 
+  )
+
+const PersonForm = (props) => (
+    <form onSubmit={props.handleSubmit}>
+      <div>
+        name: <input value={props.newAcquaintance.name} onChange={props.nameChangeHandler} />
+      </div>
+      <div>
+        number: <input value={props.newAcquaintance.number} onChange={props.numberChangeHandler}/>
+      </div>
+      <div>
+        <button type="submit">add</button>
+      </div>
+    </form>
+  )
+
+const Acquaintances = ({ filter }) => (
+  <ul style={{listStyleType: 'none'}}>
+      {filter.map(contact => <Contact key={contact.name} contact={contact} />)}
+  </ul>
+  )
+
 const App = () => {
   const [ persons, setPersons] = useState([
     { name: 'Arto Hellas', number: '040-123456' },
@@ -7,9 +35,7 @@ const App = () => {
     { name: 'Dan Abramov', number: '12-43-234345' },
     { name: 'Mary Poppendieck', number: '39-23-6423122' }
   ]) 
-  const [ newPerson, setNewPerson ] = useState(
-    { name: '', number: '' }
-  )
+  const [ newPerson, setNewPerson ] = useState({ name: '', number: '' })
   const [ filter, setFilter ] = useState('')
 
   const previouslyAdded = persons.some(person => person.name === newPerson.name)
@@ -42,43 +68,23 @@ const App = () => {
     setNewPerson({ ...newPerson, number: event.target.value})
   }
 
-  const Contact = ({ contact }) => (
-    <li>{contact.name} {contact.number}</li>
-  )
-
   const contactsToShow = filter.length === 0
     ? persons
     : persons.filter(person => person.name.toLowerCase().includes(filter.toLowerCase()))
 
   return (
-    
     <React.Fragment>
       <h2>Phonebook</h2>
 
-      <div>
-        filter shown with: <input value={filter} onChange={handleFilterChange}/>
-      </div>
+      <Filter filter={filter} handleChange={handleFilterChange}/>
 
-      <h2>add a new</h2>
+      <h3>add a new</h3>
 
-      <form onSubmit={addPerson}>
-        <div>
-          name: <input value={newPerson.name} onChange={handleNameChange} />
-        </div>
-        <div>
-          number: <input value={newPerson.number} onChange={handleNumberChange}/>
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
+      <PersonForm handleSubmit={addPerson} numberChangeHandler={handleNumberChange}
+        newAcquaintance={newPerson} nameChangeHandler={handleNameChange} />
 
-      <h2>Numbers</h2>
-      <ul style={{listStyleType: 'none'}}>
-        {contactsToShow.map(contact => 
-          <Contact key={contact.name} contact={contact} />
-        )}
-      </ul>
+      <h3>Numbers</h3>
+      <Acquaintances persons={persons} filter={contactsToShow}/>
     </React.Fragment>
   )
 }
