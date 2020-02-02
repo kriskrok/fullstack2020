@@ -10,7 +10,8 @@ const Filter = ({ filterInput, handleChange }) => {
   )
 }
 
-const DisplayCountries = ({ countries }) => {
+const DisplayCountries = ({ countries, handleClick }) => {
+  console.log('length: ', countries.length)
   if (countries.length > 10) {
     return (
       <p>Too many matches, specify another filter</p>
@@ -21,15 +22,16 @@ const DisplayCountries = ({ countries }) => {
       <SingleCountry country={countries} />
     )
   }
-
     return (
       <ul style={{listStyleType: 'none'}}>
-        {countries.map(country => <li key={country.numericCode}>{country.name}</li>)}
+        {countries.map(country => <li key={country.numericCode}>{country.name}
+        <button onClick={() => handleClick(country.name)}>show</button></li>)}
       </ul>
     ) 
 }
 
 const SingleCountry = ({ country }) => {
+  console.log('country: ', country[0])
   country = country[0]
   return (
     <>
@@ -62,13 +64,17 @@ const App = () => {
     country.name.toLowerCase().includes(filter.toLowerCase()))
 
   const handleFilterChange = (event) => {
+    console.log('filterChange: ', event.target.value)
     setFilter(event.target.value)
   }
+
+  const handleCountryClick = country => {setFilter(country)}
+  
 
   return (
     <>
       <Filter filterInput={filter} handleChange={handleFilterChange} />
-      <DisplayCountries countries={filteredCountries} />
+      <DisplayCountries countries={filteredCountries} handleClick={handleCountryClick} />
     </>
   )
 }
