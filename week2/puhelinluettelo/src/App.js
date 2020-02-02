@@ -1,42 +1,48 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import axios from 'axios'
 
 const Contact = ({ contact }) => (<li>{contact.name} {contact.number}</li>)
 
-const Filter = ({ filter, handleChange}) => (
-    <form>
-      <div>filter shown with: <input value={filter} onChange={handleChange}/></div>
-    </form> 
-  )
+const Filter = ({ filter, handleChange }) => (
+  <form>
+    <div>filter shown with: <input value={filter} onChange={handleChange}/></div>
+  </form> 
+)
 
 const PersonForm = (props) => (
-    <form onSubmit={props.handleSubmit}>
-      <div>
-        name: <input value={props.newAcquaintance.name} onChange={props.nameChangeHandler} />
-      </div>
-      <div>
-        number: <input value={props.newAcquaintance.number} onChange={props.numberChangeHandler}/>
-      </div>
-      <div>
-        <button type="submit">add</button>
-      </div>
-    </form>
-  )
+  <form onSubmit={props.handleSubmit}>
+    <div>
+      name: <input value={props.newAcquaintance.name} onChange={props.nameChangeHandler} />
+    </div>
+    <div>
+      number: <input value={props.newAcquaintance.number} onChange={props.numberChangeHandler}/>
+    </div>
+    <div>
+      <button type="submit">add</button>
+    </div>
+  </form>
+)
 
 const Acquaintances = ({ filter }) => (
   <ul style={{listStyleType: 'none'}}>
       {filter.map(contact => <Contact key={contact.name} contact={contact} />)}
   </ul>
-  )
+)
 
 const App = () => {
-  const [ persons, setPersons] = useState([
-    { name: 'Arto Hellas', number: '040-123456' },
-    { name: 'Ada Lovelace', number: '39-44-5323523' },
-    { name: 'Dan Abramov', number: '12-43-234345' },
-    { name: 'Mary Poppendieck', number: '39-23-6423122' }
-  ]) 
-  const [ newPerson, setNewPerson ] = useState({ name: '', number: '' })
   const [ filter, setFilter ] = useState('')
+  const [ persons, setPersons] = useState([]) 
+  const [ newPerson, setNewPerson ] = useState({ name: '', number: '' })
+
+  useEffect(() => {
+    const eventHandler = response => {
+      console.log('promise fulfilled')
+      setPersons(response.data)
+    }
+
+    const promise = axios.get('http://localhost:3001/persons')
+    promise.then(eventHandler)
+  }, [])
 
   const previouslyAdded = persons.some(person => person.name === newPerson.name)
 
