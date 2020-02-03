@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
+import contactService from './services/persons'
 
 const Contact = ({ contact }) => (<li>{contact.name} {contact.number}</li>)
 
@@ -35,15 +35,14 @@ const App = () => {
   const [ newPerson, setNewPerson ] = useState({ name: '', number: '' })
 
   useEffect(() => {
-    console.log('hei äiti, ilman käsiä!')
-
     const eventHandler = response => {
-      console.log('promise fulfilled')
+      console.log('getAll promise fulfilled')
       setPersons(response.data)
     }
 
-    const promise = axios.get('http://localhost:3001/persons')
-    promise.then(eventHandler)
+    contactService
+      .getAll()
+      .then(eventHandler)
   }, [])
 
   const previouslyAdded = persons.some(person => person.name === newPerson.name)
@@ -59,13 +58,11 @@ const App = () => {
         number: newPerson.number
       }
 
-      axios.post('http://localhost:3001/persons', personObject)
+      contactService
+        .create(personObject)
         .then(response => {
           setPersons(persons.concat(response.data))
         })
-
-      setPersons(persons.concat(personObject))
-      
     }
 
     setNewPerson({ ...newPerson, name: '', number: ''})
