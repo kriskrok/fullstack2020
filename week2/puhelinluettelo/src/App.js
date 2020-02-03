@@ -3,9 +3,7 @@ import contactService from './services/persons'
 import './index.css'
 
 const ErrorNotification = ({ errorMessage }) => {
-  if (errorMessage === null) {
-    return null
-  }
+  if (errorMessage === null) {return null}
 
   return (
     <div className='error'>
@@ -15,9 +13,7 @@ const ErrorNotification = ({ errorMessage }) => {
 }
 
 const Notification = ({ message }) => {
-  if (message === null) {
-    return null
-  }
+  if (message === null) {return null}
 
   return (
     <div className='notification'>
@@ -28,8 +24,8 @@ const Notification = ({ message }) => {
 
 const Contact = ({ contact, onClick }) => (
   <li>
-    {contact.name} {contact.number}
-    <button onClick={() => onClick(contact.id)}>delete{contact.id}</button>
+    {contact.name} {contact.number} 
+    <button onClick={() => onClick(contact.id)}>delete</button>
   </li>
 )
 
