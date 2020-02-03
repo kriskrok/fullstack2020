@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import contactService from './services/persons'
 
-const Contact = ({ contact }) => (<li>{contact.name} {contact.number}</li>)
+const Contact = ({ contact, onClick }) => (
+  <li>
+    {contact.name} {contact.number}
+    <button onClick={() => onClick(contact.id)}>delete{contact.id}</button>
+  </li>
+)
 
 const Filter = ({ filter, handleChange }) => (
   <form>
@@ -23,20 +28,19 @@ const PersonForm = (props) => (
   </form>
 )
 
-const Acquaintances = ({ filter }) => (
+const Acquaintances = ({ filtered, handleClick }) => (
   <ul style={{listStyleType: 'none'}}>
-      {filter.map(contact => <Contact key={contact.name} contact={contact} />)}
+      {filtered.map(contact => <Contact key={contact.name} contact={contact} onClick={handleClick} />)}
   </ul>
 )
 
 const App = () => {
   const [ filter, setFilter ] = useState('')
   const [ persons, setPersons] = useState([]) 
-  const [ newPerson, setNewPerson ] = useState({ name: '', number: '' })
+  const [ newPerson, setNewPerson ] = useState({ name: '', number: '', id: '' })
 
   useEffect(() => {
     const eventHandler = response => {
-      console.log('getAll promise fulfilled')
       setPersons(response.data)
     }
 
@@ -65,14 +69,10 @@ const App = () => {
         })
     }
 
-    setNewPerson({ ...newPerson, name: '', number: ''})
+    setNewPerson({ ...newPerson, name: '', number: '', id: ''})
   }
 
-  const handleFilterChange = (event) => {
-    console.log('filterChange', event.target.value)
-    console.log('includes:', persons.filter(person => person.name.toLowerCase().includes(filter.toLowerCase())))
-    setFilter(event.target.value)
-  }
+  const handleFilterChange = event => setFilter(event.target.value)
 
   const handleNameChange = (event) => {
     console.log('nameChange', event.target.value)
@@ -82,6 +82,15 @@ const App = () => {
   const handleNumberChange = (event) => {
     console.log('numberChange', event.target.value)
     setNewPerson({ ...newPerson, number: event.target.value})
+  }
+
+  const handleRemoveClick = (id) => {
+    const name = persons.find(person => person.id === id).name
+
+    if (window.confirm(`Delete ${name} ?`)) {
+      contactService.remove(id)
+      setPersons(persons.filter(p => p.id !== id))
+    }
   }
 
   const contactsToShow = filter.length === 0
@@ -100,7 +109,7 @@ const App = () => {
         newAcquaintance={newPerson} nameChangeHandler={handleNameChange} />
 
       <h3>Numbers</h3>
-      <Acquaintances persons={persons} filter={contactsToShow}/>
+      <Acquaintances filtered={contactsToShow} handleClick={handleRemoveClick} />
     </React.Fragment>
   )
 }
