@@ -35,6 +35,8 @@ const App = () => {
   const [ newPerson, setNewPerson ] = useState({ name: '', number: '' })
 
   useEffect(() => {
+    console.log('hei äiti, ilman käsiä!')
+
     const eventHandler = response => {
       console.log('promise fulfilled')
       setPersons(response.data)
@@ -55,22 +57,33 @@ const App = () => {
       const personObject = {
         name: newPerson.name,
         number: newPerson.number
-      }  
+      }
+
+      axios.post('http://localhost:3001/persons', personObject)
+        .then(response => {
+          setPersons(persons.concat(response.data))
+        })
+
       setPersons(persons.concat(personObject))
+      
     }
 
     setNewPerson({ ...newPerson, name: '', number: ''})
   }
 
   const handleFilterChange = (event) => {
+    console.log('filterChange', event.target.value)
+    console.log('includes:', persons.filter(person => person.name.toLowerCase().includes(filter.toLowerCase())))
     setFilter(event.target.value)
   }
 
   const handleNameChange = (event) => {
+    console.log('nameChange', event.target.value)
     setNewPerson({ ...newPerson, name: event.target.value})
   }
 
   const handleNumberChange = (event) => {
+    console.log('numberChange', event.target.value)
     setNewPerson({ ...newPerson, number: event.target.value})
   }
 
