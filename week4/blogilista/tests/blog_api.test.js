@@ -35,8 +35,6 @@ test('blogs have an ID', async () => {
   const response = await api.get('/api/blogs')
   let blog = response.body[0]
 
-  console.log(blog)
-
   expect(blog).toHaveProperty('id')
   expect(blog._id).toBeUndefined()
 })
@@ -60,6 +58,31 @@ test('a valid blog can be added', async () => {
 
   const titles = blogsAtEnd.map(b => b.title)
   expect(titles).toContain('The Winnie the Pooh Guide to Blogging')
+})
+
+test('blog without likes gets assigned 0 likes', async () => {
+  const newBlog = {
+    title: 'The Winnie the Pooh Guide to Blogging',
+    author: 'James Chartrand',
+    url: 'https://copyblogger.com/winnie-the-pooh-blogging/'
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  const blogsAtEnd = await helper.blogsInDb()
+
+  let postedBlog = blogsAtEnd.filter(blog => 
+    blog.title === 'The Winnie the Pooh Guide to Blogging' &&
+    blog.author === 'James Chartrand' &&
+    blog.url === 'https://copyblogger.com/winnie-the-pooh-blogging/'
+  )
+
+  expect(...postedBlog).toHaveProperty('likes')
+  expect(postedBlog[0].likes).toBe(0)
 })
 
 afterAll (() => {

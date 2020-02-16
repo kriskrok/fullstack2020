@@ -14,7 +14,7 @@ blogsRouter.post('/', (req, res, next) => {
     title: body.title,
     author: body.author,
     url: body.url,
-    likes: Number(body.likes)
+    likes: body.likes === undefined ? 0 : Number(body.likes)
   })
 
   blog.save()
