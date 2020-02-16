@@ -19,9 +19,47 @@ test('blogs are returned as json', async () => {
 })
 
 test('all blogs are returned', async () => {
-  const response = await api.get(('/api/blogs'))
+  const response = await api.get('/api/blogs')
 
-  expect(response.body.length).toBe(helper.initialBlogs.length)
+  expect(response.body).toHaveLength(helper.initialBlogs.length)
+})
+
+test('a specific blog is within the returned blogs', async () => {
+  const response = await api.get('/api/blogs')
+
+  const titles = response.body.map(r => r.title)
+  expect(titles).toContain('Canonical string reduction')
+})
+
+test('blogs have an ID', async () => {
+  const response = await api.get('/api/blogs')
+  let blog = response.body[0]
+
+  console.log(blog)
+
+  expect(blog).toHaveProperty('id')
+  expect(blog._id).toBeUndefined()
+})
+
+test('a valid blog can be added', async () => {
+  const newBlog = {
+    title: 'The Winnie the Pooh Guide to Blogging',
+    author: 'James Chartrand',
+    url: 'https://copyblogger.com/winnie-the-pooh-blogging/',
+    likes: 9001
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  const blogsAtEnd = await helper.blogsInDb()
+  expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length +1)
+
+  const titles = blogsAtEnd.map(b => b.title)
+  expect(titles).toContain('The Winnie the Pooh Guide to Blogging')
 })
 
 afterAll (() => {
