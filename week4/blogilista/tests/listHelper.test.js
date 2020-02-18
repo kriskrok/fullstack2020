@@ -57,3 +57,25 @@ describe('favoriteBlog', () => {
     expect(favoriteBlog(blogs)).toEqual(listWithOneBlog[0])
   })
 })
+
+describe('most blogs', () => {
+  test('returns the correct one from a bigger list', () => {
+    expect(listHelper.mostBlogs(blogs).author).toEqual('Robert C. Martin')
+  })
+
+  test('returns null from an empty list', () => {
+    expect(listHelper.mostBlogs([])).toEqual(null)
+  })
+})
+
+describe('lodash black magic conjures', () => {
+  test('correct author and amount from a bigger list', () => {
+    expect(listHelper.mostLikes(blogs).author).toEqual('Edsger W. Dijkstra')
+    expect(listHelper.mostLikes(blogs).likes).toBe(17)
+  })
+
+  test('null from an empty list', () => {
+    expect(listHelper.mostLikes([])).toEqual(null)
+  })
+})
+

@@ -11,18 +11,12 @@ describe('when there is initially some blogs saved', () => {
   beforeEach(async () => {
     await Blog.deleteMany({})
     const response = await Blog.insertMany(helper.initialBlogs)
+
+    await User.deleteMany({})
+    await api
+      .post('/api/users')
+      .send({ username: 'root', name: 'Remontti Reiska', password: 'sekret' })
   })
-
-  /*beforeEach(async () => {
-    await Blog.deleteMany({})
-
-    const blogObjects = helper.initialBlogs
-      .map(blog => new Blog(blog))
-    const promiseArray = blogObjects.map(blog => blog.save())
-
-    const valmis = await Promise.all(promiseArray)
-    valmis.map(blog => blog.toJSON())
-  })*/
 
   test('blogs are returned as json', async () => {
     await api
@@ -54,20 +48,47 @@ describe('when there is initially some blogs saved', () => {
 
 
   describe('addition of a new blog', () => {
-    test('succeeds with valid data', async () => {
+
+    test('fails without a valid token', async () => {
       const newBlog = {
         title: 'The Winnie the Pooh Guide to Blogging',
         author: 'James Chartrand',
         url: 'https://copyblogger.com/winnie-the-pooh-blogging/',
         likes: 9001
       }
+  
+      const response = await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(401)
+        .expect('Content-Type', /application\/json/)
 
+      expect(response.body).toHaveProperty('error')
+      expect(response.body.error).toContain('invalid token')
+
+    })
+
+    test('succeeds with valid token and data', async () => {
+      const res = await api
+        .post('/api/login')
+        .send({ username: 'root', password: 'sekret' })
+  
+      const token = 'bearer '.concat(res.body.token)
+  
+      const newBlog = {
+        title: 'The Winnie the Pooh Guide to Blogging',
+        author: 'James Chartrand',
+        url: 'https://copyblogger.com/winnie-the-pooh-blogging/',
+        likes: 9001
+      }
+  
       await api
         .post('/api/blogs')
         .send(newBlog)
+        .set('Authorization', token)
         .expect(201)
         .expect('Content-Type', /application\/json/)
-
+  
       const blogsAtEnd = await helper.blogsInDb()
       expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1)
 
@@ -75,7 +96,14 @@ describe('when there is initially some blogs saved', () => {
       expect(titles).toContain('The Winnie the Pooh Guide to Blogging')
     })
 
+
     test('without likes gets assigned 0 likes', async () => {
+      const res = await api
+        .post('/api/login')
+        .send({ username: 'root', password: 'sekret' })
+  
+      const token = 'bearer '.concat(res.body.token)
+
       const newBlog = {
         title: 'The Winnie the Pooh Guide to Blogging',
         author: 'James Chartrand',
@@ -85,6 +113,7 @@ describe('when there is initially some blogs saved', () => {
       await api
         .post('/api/blogs')
         .send(newBlog)
+        .set('Authorization', token)
         .expect(201)
         .expect('Content-Type', /application\/json/)
 
@@ -101,6 +130,12 @@ describe('when there is initially some blogs saved', () => {
     })
 
     test('fails with status code 400 if title is missing', async () => {
+      const res = await api
+        .post('/api/login')
+        .send({ username: 'root', password: 'sekret' })
+  
+      const token = 'bearer '.concat(res.body.token)
+
       const newBlog = {
         author: 'James Chartrand',
         url: 'https://copyblogger.com/winnie-the-pooh-blogging/'
@@ -108,6 +143,7 @@ describe('when there is initially some blogs saved', () => {
       await api
         .post('/api/blogs')
         .send(newBlog)
+        .set('Authorization', token)
         .expect(400)
 
       const blogsAtEnd = await helper.blogsInDb()
@@ -116,6 +152,12 @@ describe('when there is initially some blogs saved', () => {
     })
 
     test('fails with status code 400 if url is missing', async () => {
+      const res = await api
+        .post('/api/login')
+        .send({ username: 'root', password: 'sekret' })
+  
+      const token = 'bearer '.concat(res.body.token)
+
       const newBlog = {
         title: 'The Winnie the Pooh Guide to Blogging',
         author: 'James Chartrand'
@@ -123,6 +165,7 @@ describe('when there is initially some blogs saved', () => {
       await api
         .post('/api/blogs')
         .send(newBlog)
+        .set('Authorization', token)
         .expect(400)
 
       const blogsAtEnd = await helper.blogsInDb()
@@ -135,17 +178,38 @@ describe('when there is initially some blogs saved', () => {
   describe('deletion of a blog', () => {
     test('succeeds with status code 204 if id is valid', async () => {
       const blogsAtStart = await helper.blogsInDb()
-      const blogToDelete = blogsAtStart[0]
+
+      const response = await api
+        .post('/api/login')
+        .send({ username: 'root', password: 'sekret' })
+  
+      const token = 'bearer '.concat(response.body.token)
+  
+      const newBlog = {
+        title: 'The Winnie the Pooh Guide to Blogging',
+        author: 'James Chartrand',
+        url: 'https://copyblogger.com/winnie-the-pooh-blogging/',
+        likes: 9001
+      }
+  
+      const postedBlog = await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .set('Authorization', token)
+        .expect(201)
+        .expect('Content-Type', /application\/json/)
+  
 
       await api
-        .delete(`/api/blogs/${blogToDelete.id}`)
+        .delete(`/api/blogs/${postedBlog.body.id}`)
+        .set('Authorization', token)
         .expect(204)
 
       const blogsAtEnd = await helper.blogsInDb()
       const contents = blogsAtEnd.map(r => r.url)
 
-      expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length - 1)
-      expect(contents).not.toContain(blogToDelete.url)
+      expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length)
+      expect(contents).not.toContain(newBlog.url)
     })
   })
 

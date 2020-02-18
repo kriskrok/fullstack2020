@@ -19,7 +19,6 @@ blogsRouter.post('/', async (req, res, next) => {
   }
 
   const user = await User.findById(decodedToken.id)
-  console.log('käyttäjäMME: ', user)
 
   if (!!body.title && !!body.url) {
     const blog = new Blog({
