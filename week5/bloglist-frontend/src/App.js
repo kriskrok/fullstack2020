@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import Blog from './components/Blog'
+import Button from './components/Button'
 import blogService from './services/blogs'
 import loginService from './services/login'
-
-
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -25,21 +24,36 @@ const App = () => {
     })
   }, [])
 
+  useEffect(() => {
+    const loggedUserJSON = window.localStorage.getItem('loggedAppUser')
+    if (loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON)
+      setUser(user)
+    }
+  }, [])
+
+  const handleLogout = () => {
+    window.localStorage.removeItem('loggedAppUser')
+    setUser(null)
+  }
+
   const handleLogin = async (event) => {
     event.preventDefault()
-    console.log('logging in with', username, password)
-
     try {
       const user = await loginService.login ({
-        "username": username,
-        "password": password
+        username,
+        password
       })
+
+      window.localStorage.setItem(
+        'loggedAppUser', JSON.stringify(user)
+      )
+
       setUser(user)
       setUsername('')
       setPassword('')
     } catch (exception) {
       console.log('wrong credentials')
-      console.log('catch: ', exception)
     }
   }
 
@@ -63,7 +77,7 @@ const App = () => {
   if (user === null) {
     return (
       <div>
-          <h2>Please find opportunity to log in attached</h2>
+          <h2>Kindly log in to continue</h2>
           {loginForm()}
         </div>
     )
@@ -73,11 +87,17 @@ const App = () => {
     <>
       <h2>blogs</h2>
       <div>
-        <p>logged in as {user.name}</p>
+        <p>
+          logged in as {user.name}
+          <Button onClick={handleLogout} text={'logout'} />
+        </p>
+        </div>
+        <div>
         {blogs.map(blog => 
             <Blog key={blog.id} blog={blog} />
         )}
-      </div>
+        </div>
+      
     </>
   )
 }
