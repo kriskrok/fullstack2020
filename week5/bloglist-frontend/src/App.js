@@ -48,8 +48,8 @@ const App = () => {
       blogService.setToken(user.token)
       setUser(user)
     } catch (exception) {
-      setNotification(`Invalid credentials, do give it a second spin`)
-        setTimeout(() => {setNotification(null)}, 10000)
+      setNotification('Invalid credentials, do give it a second spin')
+      setTimeout(() => {setNotification(null)}, 10000)
     }
   }
 
@@ -60,10 +60,10 @@ const App = () => {
 
       setBlogs(blogs.concat(postedBlog))
       setNotification(`brand spanking new blog ${postedBlog.title} by ${postedBlog.author} added, rejoice!`)
-        setTimeout(() => {setNotification(null)}, 10000)
+      setTimeout(() => {setNotification(null)}, 10000)
     } catch (exception) {
       setNotification(`There has been an ${exception}`)
-        setTimeout(() => {setNotification(null)}, 10000)
+      setTimeout(() => {setNotification(null)}, 10000)
     }
   }
 
@@ -73,7 +73,7 @@ const App = () => {
       setBlogs(blogs.map(blog => blog.id !== id ? blog : updatedBlog))
     } catch (exception) {
       setNotification(`There has been an ${exception}`)
-        setTimeout(() => {setNotification(null)}, 10000)
+      setTimeout(() => {setNotification(null)}, 10000)
     }
   }
 
@@ -83,11 +83,11 @@ const App = () => {
       setBlogs(blogs.filter(blog => blog.id !== removedBlog.id))
 
       setNotification(`Blog ${removedBlog.title} by ${removedBlog.author} was smited into oblivion.`)
-        setTimeout(() => {setNotification(null)}, 10000)
+      setTimeout(() => {setNotification(null)}, 10000)
     } catch (exception) {
       setNotification(`There has been an ${exception}`)
-        setTimeout(() => {setNotification(null)}, 10000)
-    } 
+      setTimeout(() => {setNotification(null)}, 10000)
+    }
   }
 
   const submitForm = () => (
@@ -118,9 +118,9 @@ const App = () => {
       <Notification message={notification} />
       {submitForm()}
       <div>
-        {blogs.map(blog => 
+        {blogs.map(blog =>
           <Blog key={blog.id} blog={blog} updateBlog={updateBlog}
-                removeBlog={removeBlog} loggedUser={user.username}/>
+            removeBlog={removeBlog} loggedUser={user.username}/>
         )}
       </div>
     </>

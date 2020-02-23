@@ -1,4 +1,5 @@
-import React, {useState} from 'react'
+import React, { useState } from 'react'
+import PropTypes from 'prop-types'
 
 const Blog = ({ blog, updateBlog, removeBlog, loggedUser }) => {
   const [displayAll, setdisplayAll] = useState(false)
@@ -15,13 +16,13 @@ const Blog = ({ blog, updateBlog, removeBlog, loggedUser }) => {
 
   const likeBlog = () => {
     updateBlog(blog.id,
-    {
-      title: blog.title,
-      author: blog.author,
-      url: blog.url,
-      likes: blog.likes + 1,
-      user: blog.user.id
-    })
+      {
+        title: blog.title,
+        author: blog.author,
+        url: blog.url,
+        likes: blog.likes + 1,
+        user: blog.user.id
+      })
   }
 
   const confirmRemove = () => {
@@ -34,15 +35,14 @@ const Blog = ({ blog, updateBlog, removeBlog, loggedUser }) => {
   if (displayAll) {
     return (
       <div style={blogStyle}>
-      {blog.title} by <i>{blog.author}</i><button onClick={() => toggleShowAll()}>hide</button><br />
-      {blog.url}<br />
-      likes {blog.likes} <button onClick={() => likeBlog()}>like</button><br />
-      {blog.user.name}<br />
-      {loggedUser === blog.user.username
-        ? <button onClick={() => confirmRemove()}>remove</button>
-        : null}
-      
-    </div>
+        {blog.title} by <i>{blog.author}</i><button onClick={() => toggleShowAll()}>hide</button><br />
+        {blog.url}<br />
+        likes {blog.likes} <button onClick={() => likeBlog()}>like</button><br />
+        {blog.user.name}<br />
+        {loggedUser === blog.user.username
+          ? <button onClick={() => confirmRemove()}>remove</button>
+          : null}
+      </div>
     )
   }
   return (
@@ -50,6 +50,13 @@ const Blog = ({ blog, updateBlog, removeBlog, loggedUser }) => {
       {blog.title} by <i>{blog.author}</i><button onClick={() => toggleShowAll()}>view</button>
     </div>
   )
+}
+
+Blog.propTypes = {
+  blog: PropTypes.object,
+  updateBlog: PropTypes.func,
+  removeBlog:PropTypes.func,
+  loggedUser: PropTypes.string
 }
 
 export default Blog
