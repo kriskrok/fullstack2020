@@ -1,0 +1,16 @@
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InLDtmxsaSIsImlkIjoiNWU0YmQ1Yjc0YWI2ZTAwYTg2M2MwODg2IiwiaWF0IjoxNTgyMDQ3MDgzfQ.ILsezgVkvOr7-JhBRDa34IXsT6Y33GN6aCZv6E0C7qI
+
+{
+    "title": "No hands",
+    "author": "Best author",
+    "url": "example.com",
+    "likes": 14
+}
+
+###
+
+DELETE http://localhost:3003/api/blogs/5e4c2bb8cc89fb468a8da0ca
+Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InLDtmxsaSIsImlkIjoiNWU0YmQ1Yjc0YWI2ZTAwYTg2M2MwODg2IiwiaWF0IjoxNTgyMDQ3MDgzfQ.ILsezgVkvOr7-JhBRDa34IXsT6Y33GN6aCZv6E0C7qI

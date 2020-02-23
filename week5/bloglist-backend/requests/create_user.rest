@@ -1,0 +1,57 @@
+POST http://localhost:3003/api/login
+Content-Type: application/json
+
+{
+    "username": "Kalle",
+    "password": "ellaK"
+}
+
+###
+
+GET http://localhost:3003/api/users
+
+###
+
+POST http://localhost:3003/api/users
+Content-Type: application/json
+
+{
+    "username": "rölli",
+    "name": "Röllimetsän Rölli",
+    "password": "likaiset_varpaat"
+}
+
+###
+
+POST http://localhost:3003/api/users
+Content-Type: application/json
+
+{
+    "username": "Maija",
+    "name": "Maija Mehiläinen",
+    "password": "sateenvarjokala"
+}
+
+###
+
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+
+{
+    "title": "The Winnie the Pooh Guide to Blogging",
+    "author": "James Chartrand",
+    "url": "https://copyblogger.com/winnie-the-pooh-blogging/",
+    "likes": 5678,
+    "userId": "5e4bd5b74ab6e00a863c0886"
+}
+
+###
+
+POST http://localhost:3003/api/users
+Content-Type: application/json
+
+{
+    "username": "Kalle",
+    "name": "Remontti Reiska",
+    "password": "ellaK"
+}
