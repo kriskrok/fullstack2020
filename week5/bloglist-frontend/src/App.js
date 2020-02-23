@@ -39,7 +39,7 @@ const App = () => {
 
   const handleLogin = async (userObject) => {
     try {
-      const user = await loginService.login (userObject)
+      const user = await loginService.login(userObject)
 
       window.localStorage.setItem(
         'loggedAppUser', JSON.stringify(user)
@@ -77,6 +77,19 @@ const App = () => {
     }
   }
 
+  const removeBlog = async (removedBlog) => {
+    try {
+      await blogService.remove(removedBlog.id)
+      setBlogs(blogs.filter(blog => blog.id !== removedBlog.id))
+
+      setNotification(`Blog ${removedBlog.title} by ${removedBlog.author} was smited into oblivion.`)
+        setTimeout(() => {setNotification(null)}, 10000)
+    } catch (exception) {
+      setNotification(`There has been an ${exception}`)
+        setTimeout(() => {setNotification(null)}, 10000)
+    } 
+  }
+
   const submitForm = () => (
     <Togglable buttonLabel='new blog' ref={blogFormRef}>
       <SubmitForm createBlog={addNewBlog} />
@@ -106,7 +119,8 @@ const App = () => {
       {submitForm()}
       <div>
         {blogs.map(blog => 
-          <Blog key={blog.id} blog={blog} updateBlog={updateBlog} />
+          <Blog key={blog.id} blog={blog} updateBlog={updateBlog}
+                removeBlog={removeBlog} loggedUser={user.username}/>
         )}
       </div>
     </>
