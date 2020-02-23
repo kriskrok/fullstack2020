@@ -15,17 +15,9 @@ const App = () => {
 
   const blogFormRef = React.createRef()
 
-   /*useEffect(() => {
-     (async function getBlogs() {
-       const plokit = await blogService.getAll()
-       console.log('hei äiti: ', typeof plokit, plokit)
-       setBlogs(plokit)
-     }) ()
-    }, [])*/
-
   useEffect(() => {
     blogService.getAll().then(blogs => {
-      setBlogs( blogs )
+      setBlogs( sortBlogsByLikes(blogs) )
     })
   }, [])
 
@@ -36,6 +28,8 @@ const App = () => {
       setUser(user)
     }
   }, [])
+
+  const sortBlogsByLikes = blogs => blogs.sort( (a,b) => b.likes - a.likes )
 
   const handleLogout = () => {
     window.localStorage.removeItem('loggedAppUser')
