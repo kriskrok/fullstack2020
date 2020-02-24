@@ -35,7 +35,7 @@ const Blog = ({ blog, updateBlog, removeBlog, loggedUser }) => {
   if (displayAll) {
     return (
       <div style={blogStyle}>
-        {blog.title} by <i>{blog.author}</i><button onClick={() => toggleShowAll()}>hide</button><br />
+        {blog.title} by <i>{blog.author}</i><button className='hide-blog-button' onClick={() => toggleShowAll()}>hide</button><br />
         {blog.url}<br />
         likes {blog.likes} <button onClick={() => likeBlog()}>like</button><br />
         {blog.user.name}<br />
@@ -47,7 +47,7 @@ const Blog = ({ blog, updateBlog, removeBlog, loggedUser }) => {
   }
   return (
     <div style={blogStyle}>
-      {blog.title} by <i>{blog.author}</i><button onClick={() => toggleShowAll()}>view</button>
+      {blog.title} by <i>{blog.author}</i><button className='expand-blog-button' onClick={() => toggleShowAll()}>view</button>
     </div>
   )
 }
