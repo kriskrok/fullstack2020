@@ -1,4 +1,4 @@
-const notificationReducer = (state = 'look mom, no hands!', action) => {
+const notificationReducer = (state = '', action) => {
   switch (action.type) {
     case 'SET_NOTIFICATION': 
       return action.data.notification
