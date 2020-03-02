@@ -5,7 +5,6 @@ import AnecdoteForm from './components/AnecdoteForm'
 import AnecdoteList from './components/AnecdoteList'
 
 import { initializeAnecdotes } from './reducers/anecdoteReducer'
-/* import anecdoteService from './services/anecdotes' */
 
 const App = () => {
   const dispatch = useDispatch()

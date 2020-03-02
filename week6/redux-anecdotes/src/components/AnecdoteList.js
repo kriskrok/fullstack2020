@@ -4,7 +4,7 @@ import { incrementVoteOf } from '../reducers/anecdoteReducer'
 import { setNotification } from '../reducers/notificationReducer'
 import Filter from './Filter'
 
-const Anecdote = ({ anecdote, votes, id }) => {
+const Anecdote = ({ anecdote }) => {
   const dispatch = useDispatch()
   const displayNotification = (content) => {
       
@@ -16,12 +16,12 @@ const Anecdote = ({ anecdote, votes, id }) => {
 
   return (
     <>
-      <div>{anecdote}</div>
+      <div>{anecdote.content}</div>
       <div>
-        has {votes}
+        has {anecdote.votes}
         <button onClick={() => {
-            dispatch(incrementVoteOf(id))
-            displayNotification(anecdote)
+            dispatch(incrementVoteOf(anecdote))
+            displayNotification(anecdote.content)
         }}
         >vote</button>
       </div>
@@ -43,9 +43,7 @@ const AnecdoteList = () => {
       {anecdotes.map(anecdote =>
         <Anecdote
           key={anecdote.id}
-          anecdote={anecdote.content}
-          votes={anecdote.votes}
-          id={anecdote.id}
+          anecdote={anecdote}
         />
       )}
     </>
