@@ -7,11 +7,7 @@ import Filter from './Filter'
 const Anecdote = ({ anecdote }) => {
   const dispatch = useDispatch()
   const displayNotification = (content) => {
-      
-    dispatch(setNotification(`you voted '${content}'`))
-    setTimeout(() => {
-      dispatch(setNotification(''))
-    }, 5000)
+    dispatch(setNotification(`you voted '${content}'`, 5))
   }
 
   return (
