@@ -2,6 +2,7 @@ import React from 'react'
 import { useDispatch } from 'react-redux'
 import { createNew } from '../reducers/anecdoteReducer'
 import { setNotification } from '../reducers/notificationReducer'
+import anecdoteService from '../services/anecdotes'
 
 const AnecdoteForm = (props) => {
   const dispatch = useDispatch()
@@ -13,12 +14,14 @@ const AnecdoteForm = (props) => {
     }, 5000)
   }
 
-  const addAnecdote = (event) => {
+  const addAnecdote = async (event) => {
     event.preventDefault()
     const content = event.target.anecdote.value
     event.target.anecdote.value = ''
-    dispatch(createNew(content))
-    displayNotification(content)
+    const newAnecdote = await anecdoteService.createNew(content)
+    console.log('asdfasdf', newAnecdote)
+    dispatch(createNew(newAnecdote))
+    displayNotification(newAnecdote.content)
   }
 
   return (
