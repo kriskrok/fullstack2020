@@ -1,4 +1,4 @@
-const getId = () => (100000 * Math.random()).toFixed(0)
+import anecdoteService from '../services/anecdotes'
 
 export const incrementVoteOf = (id) => {
   console.log('vote', id)
@@ -8,17 +8,23 @@ export const incrementVoteOf = (id) => {
   }
 }
 
-export const createNew = (anecdote) => {
-  return {
-    type: 'NEW_ANECDOTE',
-    data: anecdote
+export const createNew = anecdote => {
+  return async dispatch => {
+    const newNote = await anecdoteService.createNew(anecdote)
+    dispatch({
+      type: 'NEW_ANECDOTE',
+      data: newNote,
+    })
   }
 }
 
-export const initializeAnecdotes = (anecdotes) => {
-  return {
-    type: 'INIT_ANECDOTES',
-    data: anecdotes
+export const initializeAnecdotes = () => {
+  return async dispatch => {
+    const anecdotes = await anecdoteService.getAll()
+    dispatch({
+      type: 'INIT_ANECDOTES',
+      data: anecdotes
+    })
   }
 }
 
