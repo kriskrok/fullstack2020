@@ -1,15 +1,12 @@
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
+import NewAnecdote from './components/NewAnecdote'
 import { incrementVoteOf} from './reducers/anecdoteReducer'
 
 const App = () => {
   const anecdotes = useSelector(state => state)
   const dispatch = useDispatch()
 
-  const vote = (id) => {
-    console.log('vote', id)
-    dispatch()
-  }
 
   return (
     <div>
@@ -25,11 +22,7 @@ const App = () => {
           </div>
         </div>
       )}
-      <h2>create new</h2>
-      <form>
-        <div><input /></div>
-        <button>create</button>
-      </form>
+      <NewAnecdote />
     </div>
   )
 }
