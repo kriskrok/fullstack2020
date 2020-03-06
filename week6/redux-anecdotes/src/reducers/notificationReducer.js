@@ -13,7 +13,7 @@ export const setNotification = (notification, timer) => {
       type: 'SET_NOTIFICATION',
       data: { notification }  
     })
-
+    
     await new Promise(resolve => setTimeout(resolve, timer * 1000))
 
     dispatch({
