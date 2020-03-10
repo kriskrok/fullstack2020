@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useField } from './hooks'
 import { BrowserRouter as Router, Switch, Route, Link, useParams, useHistory } from 'react-router-dom'
 
 const Menu = () => {
@@ -50,22 +51,33 @@ const Footer = () => (
 )
 
 const CreateNew = (props) => {
-  const [content, setContent] = useState('')
-  const [author, setAuthor] = useState('')
-  const [info, setInfo] = useState('')
+  const content = useField('text')
+  const author = useField('text')
+  const info = useField('text')
 
   const history = useHistory()
+
 
   const handleSubmit = (e) => {
     e.preventDefault()
     props.addNew({
-      content,
-      author,
-      info,
+      content: content.value,
+      author: author.value,
+      info: info.value,
       votes: 0
     })
     history.push('/')
   }
+
+  const handleFormReset = () => {
+    content.reset()
+    author.reset()
+    info.reset()
+  }
+
+  const { reset: contentReset, ...filteredContent } = content
+  const { reset: authorReset, ...filteredAuthor} = author
+  const { reset: infoReset, ...filteredInfo} = info
 
   return (
     <div>
@@ -73,18 +85,20 @@ const CreateNew = (props) => {
       <form onSubmit={handleSubmit}>
         <div>
           content
-          <input name='content' value={content} onChange={(e) => setContent(e.target.value)} />
+          <input {...filteredContent} />
         </div>
         <div>
           author
-          <input name='author' value={author} onChange={(e) => setAuthor(e.target.value)} />
+          <input {...filteredAuthor} />
         </div>
         <div>
           url for more info
-          <input name='info' value={info} onChange={(e)=> setInfo(e.target.value)} />
+          <input {...filteredInfo} />
         </div>
-        <button>create</button>
+        <button type='submit'>create</button>
+        <button type='button' onClick={handleFormReset}>reset</button>
       </form>
+      
     </div>
   )
 }
@@ -188,4 +202,4 @@ const App = () => {
   )
 }
 
-export default App;
+export default App
