@@ -1,0 +1,12 @@
+.notification{
+  text-align: center;
+  font-size: calc(10px + 2vmin);
+  animation:blinkingText 1.5s infinite;
+}
+@keyframes blinkingText{
+  0%{      color: rgb(95, 251, 23); }
+  25%{     color: transparent;        }
+  50%{     color: rgb(95, 251, 23); }
+  75%{     color: transparent;        }
+  100%{    color: rgb(95, 251, 23); }
+}
