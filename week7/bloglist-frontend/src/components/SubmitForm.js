@@ -17,30 +17,38 @@ const SubmitForm = ({ createBlog }) => {
 
   return (
     <>
-      <h2>create new</h2>
-      <form onSubmit={addBlog} className='submit-form'>
-        <div>
-          <label htmlFor="title">
+      <form style={{ margin: 'auto', maxWidth: '50%'}} onSubmit={addBlog} className='submit-form'>
+        <h2>create new</h2>
+        <div className='form-group row'>
+          <label htmlFor='username' className='col-sm-3 col-form-label'>
             title:
-            <input type="text" value={newBlog.title} name="title"
+          </label>
+          <div className='col-sm-9'>
+            <input type='text' className='form-control' value={newBlog.title} id='title' required
               onChange={({ target }) => (setNewBlog({ ...newBlog, title: target.value }))} />
-          </label>
+          </div>
         </div>
-        <div>
-          <label htmlFor="author">
+
+        <div className='form-group row'>
+          <label htmlFor='author' className='col-sm-3 col-form-label'>
             author:
-            <input type="text" value={newBlog.author} name="author"
+          </label>
+          <div className='col-sm-9'>
+            <input type='text' className='form-control' value={newBlog.author} id='author' required
               onChange={({ target }) => (setNewBlog({ ...newBlog, author: target.value }))} />
-          </label>
+          </div>
         </div>
-        <div>
-          <label htmlFor="url">
+
+        <div className='form-group row'>
+          <label htmlFor='url' className='col-sm-3 col-form-label'>
             url:
-            <input type="text" value={newBlog.url} name="url" spellCheck="false"
-              onChange={({ target }) => (setNewBlog({ ...newBlog, url: target.value }))} />
           </label>
+          <div className='col-sm-9'>
+            <input type='text' className='form-control' value={newBlog.url} id='url' required
+              onChange={({ target }) => (setNewBlog({ ...newBlog, url: target.value }))} />
+          </div>
         </div>
-        <button type="submit">create</button>
+        <button type='submit' className='btn btn-dark'>create</button>
       </form>
     </>
   )

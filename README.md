@@ -8,6 +8,7 @@
 - [osa4](https://github.com/kriskrok/fullstack2020/tree/master/week4)
 - [osa5](https://github.com/kriskrok/fullstack2020/tree/master/week5)
 - [osa6](https://github.com/kriskrok/fullstack2020/tree/master/week6)
+- [osa7](https://github.com/kriskrok/fullstack2020/tree/master/week7)
 
 <p align="center">
   <img src="https://teeshirtpalace-production.s3.amazonaws.com/spree/images/LLM696-BLACK-HPOST/large/LLM696-BLACK-HPOST.jpg">
