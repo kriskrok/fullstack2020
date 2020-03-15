@@ -1,43 +1,39 @@
-import React, { useState, useEffect } from 'react'
-import { useDispatch } from 'react-redux'
-import Blog from './components/Blog'
-import Button from './components/Button'
-import Notification from './components/Notification'
+import React, { useEffect } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import Button from './components/Button'
+import BlogList from './components/BlogList'
 import LoginForm from './components/LoginForm'
-import SubmitForm from './components/SubmitForm'
 import Togglable from './components/Togglable'
+import SubmitForm from './components/SubmitForm'
+import Notification from './components/Notification'
+import { setUser, expelUser } from './reducers/userReducer'
 import { setNotification as setNote } from './reducers/notificationReducer'
+import { initializeBlogs, updateBlog as refreshBlog, removeBlog as eraseBlog, createBlog as newBlog } from './reducers/blogsReducer'
+
 
 const App = () => {
   const dispatch = useDispatch()
-
-  const [blogs, setBlogs] = useState([])
-  const [user, setUser] = useState(null)
-
+  const user = useSelector(state => state.user)
   const blogFormRef = React.createRef()
 
   useEffect(() => {
-    blogService.getAll().then(blogs => {
-      setBlogs( sortBlogsByLikes(blogs) )
-    })
-  }, [])
+    dispatch(initializeBlogs())
+  }, [dispatch])
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedAppUser')
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
-      setUser(user)
+      dispatch(setUser(user))
     }
-  }, [])
-
-  const sortBlogsByLikes = blogs => blogs.sort( (a,b) => b.likes - a.likes )
+  }, [dispatch])
 
   const handleLogout = () => {
     window.localStorage.removeItem('loggedAppUser')
     blogService.setToken(null)
-    setUser(null)
+    dispatch(expelUser())
   }
 
   const handleLogin = async (userObject) => {
@@ -49,7 +45,7 @@ const App = () => {
       )
 
       blogService.setToken(user.token)
-      setUser(user)
+      dispatch(setUser(user))
     } catch (exception) {
       dispatch(setNote('Invalid credentials, do give it a second spin'))
     }
@@ -60,7 +56,7 @@ const App = () => {
       blogFormRef.current.toggleVisibility()
       const postedBlog = await blogService.create(blogObject)
 
-      setBlogs(blogs.concat(postedBlog))
+      dispatch(newBlog(postedBlog))
       dispatch(setNote(`brand spanking new blog ${postedBlog.title} by ${postedBlog.author} added, rejoice!`))
     } catch (exception) {
       dispatch(setNote(`There has been an ${exception}`))
@@ -70,18 +66,17 @@ const App = () => {
   const updateBlog = async (id, blogObject) => {
     try {
       const updatedBlog = await blogService.update(id, blogObject)
-      setBlogs(blogs.map(blog => blog.id !== id ? blog : updatedBlog))
+      dispatch(refreshBlog(updatedBlog))
     } catch (exception) {
       dispatch(setNote(`There has been an ${exception}`))
     }
   }
 
-  const removeBlog = async (removedBlog) => {
+  const removeBlog = async (blogToBeRemoved) => {
     try {
-      await blogService.remove(removedBlog.id)
-      setBlogs(blogs.filter(blog => blog.id !== removedBlog.id))
-
-      dispatch(setNote(`Blog ${removedBlog.title} by ${removedBlog.author} was smited into oblivion.`))
+      await blogService.remove(blogToBeRemoved.id)
+      dispatch(eraseBlog(blogToBeRemoved.id))
+      dispatch(setNote(`Blog ${blogToBeRemoved.title} by ${blogToBeRemoved.author} was smited into oblivion.`))
     } catch (exception) {
       dispatch(setNote(`There has been an ${exception}`))
     }
@@ -114,12 +109,7 @@ const App = () => {
       </div>
       <Notification />
       {submitForm()}
-      <div>
-        {blogs.map(blog =>
-          <Blog key={blog.id} blog={blog} updateBlog={updateBlog}
-            removeBlog={removeBlog} loggedUser={user.username}/>
-        )}
-      </div>
+      <BlogList loggedUser={user.username} updateBlog={updateBlog} removeBlog={removeBlog}/>
     </>
   )
 }

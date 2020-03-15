@@ -23,11 +23,13 @@ const create = async (blog) => {
 }
 
 const update = async (id, blogObject) => {
+  console.log('update metodi blogs palvelusta')
   const request = await axios.put(`${baseUrl}/${id}`, blogObject)
   return request.data
 }
 
 const remove = async (blogId) => {
+  console.log('remove metodi blogs palvelusta', token, blogId)
   const request = await axios.delete(`${baseUrl}/${blogId}`, { headers: { Authorization: token } })
   return request.data
 }

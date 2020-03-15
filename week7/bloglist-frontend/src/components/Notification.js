@@ -5,12 +5,9 @@ import '../App.css'
 
 const Notification = ({ message }) => {
   const dispatch = useDispatch()
-  const note = useSelector(state => state)
+  const note = useSelector(state => state.notification)
 
   if (!note) return null
-
-  const aa = 'it begins'
-  console.log(aa)
 
   setTimeout(() => {
     dispatch(clearNotification())

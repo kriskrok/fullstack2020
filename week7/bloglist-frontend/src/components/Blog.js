@@ -15,14 +15,14 @@ const Blog = ({ blog, updateBlog, removeBlog, loggedUser }) => {
   const toggleShowAll = () => setdisplayAll(!displayAll)
 
   const likeBlog = () => {
-    updateBlog(blog.id,
-      {
-        title: blog.title,
-        author: blog.author,
-        url: blog.url,
-        likes: blog.likes + 1,
-        user: blog.user.id
-      })
+      updateBlog(blog.id,
+        {
+          title: blog.title,
+          author: blog.author,
+          url: blog.url,
+          likes: blog.likes + 1,
+          user: blog.user.id
+        })
   }
 
   const confirmRemove = () => {
